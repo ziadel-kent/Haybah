@@ -65,17 +65,19 @@ export default function Header() {
               <span>{i18n.language === 'en' ? 'AR' : 'EN'}</span>
             </button>
 
-            <Link 
-              to="/cart" 
-              className="p-2.5 hover:bg-gray-50 rounded-xl transition-colors relative group"
-            >
-              <ShoppingCart size={22} className="group-hover:scale-110 transition-transform" />
-              {cartCount > 0 && (
-                <span className="absolute top-1.5 right-1.5 bg-black text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full ring-2 ring-white">
-                  {cartCount}
-                </span>
-              )}
-            </Link>
+            {!isAdmin && (
+              <Link 
+                to="/cart" 
+                className="p-2.5 hover:bg-gray-50 rounded-xl transition-colors relative group"
+              >
+                <ShoppingCart size={22} className="group-hover:scale-110 transition-transform" />
+                {cartCount > 0 && (
+                  <span className="absolute top-1.5 right-1.5 bg-black text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full ring-2 ring-white">
+                    {cartCount}
+                  </span>
+                )}
+              </Link>
+            )}
 
             {user ? (
               <div className="flex items-center space-x-4 rtl:space-x-reverse">

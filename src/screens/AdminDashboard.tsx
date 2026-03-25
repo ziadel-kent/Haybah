@@ -4,10 +4,11 @@ import { productService } from '../services/productService';
 import { authService } from '../services/authService';
 import { useAuth } from '../hooks/useAuth';
 import { Navigate } from 'react-router-dom';
-import { Plus, Package, Trash2, Edit, Users, Shield, User as UserIcon, Mail, MessageCircle, Database } from 'lucide-react';
+import { Plus, Package, Trash2, Edit, Users, Shield, User as UserIcon, Mail, Database } from 'lucide-react';
 import AdminProductForm from '../components/AdminProductForm';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
+import { getApiUrl } from '../lib/api';
 
 interface SendEmailModalProps {
   user: UserProfile;
@@ -48,7 +49,7 @@ The Haybah Team 🌿
 
     setSending(true);
     try {
-      const response = await fetch('/api/send-email', {
+      const response = await fetch(getApiUrl('send-email'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -182,32 +183,6 @@ export default function AdminDashboard() {
     } catch (error) {
       toast.error('Failed to update user role');
     }
-  };
-
-  const handleWhatsApp = (user: UserProfile) => {
-    if (!user.phoneNumber) {
-      toast.error('This user has no phone number registered');
-      return;
-    }
-    
-    const cleanNumber = user.phoneNumber.replace(/\D/g, '');
-    const message = encodeURIComponent(`Assalamu Alaikum! ✨ 
-
-We are from Haybah and we wanted to reach out to you... 🌸
-
-Haybah regards,
-The Haybah Team 🌿
-
----
-
-السلام عليكم! ✨
-
-نحن من فريق هيبة وأردنا التواصل معك... 🌸
-
-مع تحيات هيبة،
-فريق هيبة 🌿`);
-    
-    window.open(`https://wa.me/${cleanNumber}?text=${message}`, '_blank');
   };
 
   const handleSeedDemoData = async () => {
@@ -531,13 +506,6 @@ The Haybah Team 🌿
                     <td className="px-6 py-4 text-right rtl:text-left">
                       <div className="flex justify-end rtl:justify-start items-center space-x-3 rtl:space-x-reverse">
                         <button
-                          onClick={() => handleWhatsApp(u)}
-                          className="p-2 text-gray-400 hover:text-green-500 transition-colors"
-                          title="Send WhatsApp"
-                        >
-                          <MessageCircle size={18} />
-                        </button>
-                        <button
                           onClick={() => setEmailingUser(u)}
                           className="p-2 text-gray-400 hover:text-black transition-colors"
                           title="Send Email"
@@ -581,12 +549,6 @@ The Haybah Team 🌿
                     {u.phoneNumber || 'No phone'}
                   </div>
                   <div className="flex items-center space-x-2 rtl:space-x-reverse">
-                    <button
-                      onClick={() => handleWhatsApp(u)}
-                      className="p-2 bg-green-50 text-green-600 rounded-xl hover:bg-green-100 transition-colors"
-                    >
-                      <MessageCircle size={18} />
-                    </button>
                     <button
                       onClick={() => setEmailingUser(u)}
                       className="p-2 bg-gray-50 text-gray-600 rounded-xl hover:bg-gray-100 transition-colors"

@@ -11,6 +11,8 @@ import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../lib/firebase';
 import { UserProfile } from '../types';
 
+import { getApiUrl } from '../lib/api';
+
 export const authService = {
   async getUserProfile(uid: string): Promise<UserProfile | null> {
     const docRef = doc(db, 'users', uid);
@@ -30,9 +32,21 @@ export const authService = {
       };
       await setDoc(doc(db, 'users', user.uid), profile);
       
-      // Send welcome email with a warm attitude 🌟
-      try {
-        const welcomeArabic = `السلام عليكم! 🌸
+      // Send Automatic Welcome Messages in the background
+      this.sendAutomaticWelcome(email, phoneNumber);
+
+      return user;
+    } catch (error: any) {
+      if (error.code === 'auth/email-already-in-use') {
+        throw new Error('User already exists. Please sign in');
+      }
+      throw error;
+    }
+  },
+
+  async sendAutomaticWelcome(email: string, phoneNumber?: string) {
+    try {
+      const welcomeArabic = `السلام عليكم! 🌸
 نحن سعداء جداً بانضمامك إلى عائلة هيبة! شكراً جزيلاً لاختيارك لنا. ✨
 
 لقد تم تسجيل حسابك بنجاح برقم الهاتف: ${phoneNumber || 'لم يتم تقديمه بعد'}.
@@ -44,7 +58,7 @@ export const authService = {
 مع تحيات هيبة،
 فريق هيبة 🌿`;
 
-        const welcomeEnglish = `Assalamu Alaikum! 🌸
+      const welcomeEnglish = `Assalamu Alaikum! 🌸
 We are absolutely delighted to have you join the Haybah family! Thank you so much for choosing us. ✨
 
 We've successfully registered your account with the phone number: ${phoneNumber || 'Not provided yet'}.
@@ -56,37 +70,19 @@ Wishing you a wonderful day ahead! 💖
 Haybah regards,
 The Haybah Team 🌿`;
 
-        await fetch('/api/send-email', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            to: email,
-            subject: 'Welcome to the Haybah Family! ✨ | مرحباً بك في عائلة هيبة!',
-            text: `${welcomeEnglish}\n\n---\n\n${welcomeArabic}`
-          })
-        });
+      // Send Automatic Email (Free via Gmail)
+      fetch(getApiUrl('send-email'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          to: email,
+          subject: 'Welcome to the Haybah Family! ✨ | مرحباً بك في عائلة هيبة!',
+          text: `${welcomeEnglish}\n\n---\n\n${welcomeArabic}`
+        })
+      }).catch(e => console.error('Background email failed', e));
 
-        // Placeholder for SMS sending 📱
-        if (phoneNumber) {
-          await fetch('/api/send-sms', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              to: phoneNumber,
-              text: `Assalamu Alaikum! ✨ Welcome to Haybah. We are so happy to have you with us! 🌸 | السلام عليكم! ✨ مرحباً بك في هيبة. نحن سعداء جداً بانضمامك إلينا! 🌸`
-            })
-          });
-        }
-      } catch (e) {
-        console.error('Failed to send welcome messages', e);
-      }
-
-      return user;
-    } catch (error: any) {
-      if (error.code === 'auth/email-already-in-use') {
-        throw new Error('User already exists. Please sign in');
-      }
-      throw error;
+    } catch (e) {
+      console.error('Failed to trigger automatic welcome email', e);
     }
   },
 
@@ -139,5 +135,11 @@ The Haybah Team 🌿`;
     const { doc, updateDoc } = await import('firebase/firestore');
     const docRef = doc(db, 'users', uid);
     await updateDoc(docRef, { role });
+  },
+
+  async subscribeToNewsletter(phone: string): Promise<void> {
+    // In a real app, you'd save this to a 'subscribers' collection
+    // For now, we just trigger the automatic welcome messages
+    this.sendAutomaticWelcome('newsletter-subscriber@example.com', phone);
   }
 };

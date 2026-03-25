@@ -54,18 +54,19 @@ const resources = {
       "contact": {
         "title": "Get in Touch.",
         "subtitle": "Have a question about our products or an order? We're here to help.",
-        "email": "Email Us",
-        "call": "Call Us",
-        "visit": "Visit Us",
+        "desc": "We would love to hear from you. Our team is always here to chat and help you find the perfect thobe.",
+        "email_us": "Email Us",
+        "call_us": "Call Us",
+        "visit_us": "Visit Us",
         "location": "Qena, 23 July Street",
         "form": {
-          "first_name": "First Name",
-          "last_name": "Last Name",
+          "name": "Full Name",
           "email": "Email Address",
+          "subject": "Subject",
           "message": "Message",
-          "placeholder_first": "John",
-          "placeholder_last": "Doe",
+          "placeholder_name": "John Doe",
           "placeholder_email": "john@example.com",
+          "placeholder_subject": "What is this about?",
           "placeholder_message": "How can we help you?",
           "send": "Send Message"
         }
@@ -94,6 +95,14 @@ const resources = {
           "sizes": "Sizes",
           "actions": "Actions"
         }
+      },
+      "newsletter": {
+        "title": "Opening Soon",
+        "subtitle": "Sign up for our newsletter to be the first to know when we launch.",
+        "placeholder": "Mobile Phone Number",
+        "button": "Sign Up",
+        "success": "Thanks for subscribing!",
+        "whatsapp_message": "Hi Haybah! I'd like to join your newsletter and be notified when you launch. My number is: "
       }
     }
   },
@@ -148,18 +157,19 @@ const resources = {
       "contact": {
         "title": "تواصل معنا.",
         "subtitle": "لديك سؤال حول منتجاتنا أو طلبك؟ نحن هنا للمساعدة.",
-        "email": "راسلنا",
-        "call": "اتصل بنا",
-        "visit": "زورنا",
+        "desc": "يسعدنا دائماً سماع صوتك. فريقنا هنا للدردشة ومساعدتك في العثور على الثوب المثالي.",
+        "email_us": "راسلنا",
+        "call_us": "اتصل بنا",
+        "visit_us": "زورنا",
         "location": "قنا، شارع 23 يوليو",
         "form": {
-          "first_name": "الاسم الأول",
-          "last_name": "الاسم الأخير",
+          "name": "الاسم بالكامل",
           "email": "البريد الإلكتروني",
+          "subject": "الموضوع",
           "message": "الرسالة",
-          "placeholder_first": "أحمد",
-          "placeholder_last": "علي",
+          "placeholder_name": "أحمد علي",
           "placeholder_email": "ahmed@example.com",
+          "placeholder_subject": "بخصوص ماذا تتواصل معنا؟",
           "placeholder_message": "كيف يمكننا مساعدتك؟",
           "send": "إرسال الرسالة"
         }
@@ -188,6 +198,14 @@ const resources = {
           "sizes": "المقاسات",
           "actions": "الإجراءات"
         }
+      },
+      "newsletter": {
+        "title": "الافتتاح قريباً",
+        "subtitle": "سجل في نشرتنا الإخبارية لتكون أول من يعلم عند الافتتاح.",
+        "placeholder": "رقم الهاتف المحمول",
+        "button": "سجل الآن",
+        "success": "شكراً لاشتراكك!",
+        "whatsapp_message": "مرحباً هيبة! أود الانضمام إلى نشرتكم الإخبارية ومعرفة موعد الافتتاح. رقمي هو: "
       }
     }
   }

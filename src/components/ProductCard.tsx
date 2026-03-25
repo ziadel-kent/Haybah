@@ -49,15 +49,17 @@ export default function ProductCard({ product, onEdit, onDelete }: ProductCardPr
         )}
 
         {/* Add to Cart Overlay */}
-        <div className="absolute bottom-4 left-4 right-4 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-          <button
-            onClick={() => addToCart(product)}
-            className="w-full bg-black text-white py-3 rounded-xl font-medium flex items-center justify-center space-x-2 hover:bg-gray-900 transition-colors"
-          >
-            <Plus size={18} />
-            <span>Add to Cart</span>
-          </button>
-        </div>
+        {!isAdmin && (
+          <div className="absolute bottom-4 left-4 right-4 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+            <button
+              onClick={() => addToCart(product)}
+              className="w-full bg-black text-white py-3 rounded-xl font-medium flex items-center justify-center space-x-2 hover:bg-gray-900 transition-colors"
+            >
+              <Plus size={18} />
+              <span>Add to Cart</span>
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="mt-4 flex justify-between items-start">

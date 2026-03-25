@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Product } from '../types';
 import { productService } from '../services/productService';
+import { authService } from '../services/authService';
 import ProductCard from '../components/ProductCard';
 import { motion } from 'motion/react';
 import { ArrowRight, ShoppingBag, ShieldCheck, Zap } from 'lucide-react';
@@ -164,6 +165,79 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Newsletter Section (Opening Soon style) */}
+      <section className="section-spacing bg-white">
+        <div className="container-custom max-w-4xl text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="flex flex-col items-center"
+          >
+            <h2 className="text-4xl md:text-6xl font-extrabold text-black mb-6">
+              {t('newsletter.title')}
+            </h2>
+            <p className="text-gray-500 text-lg md:text-xl mb-12 max-w-2xl">
+              {t('newsletter.subtitle')}
+            </p>
+            
+            <NewsletterForm />
+          </motion.div>
+        </div>
+      </section>
     </div>
+  );
+}
+
+function NewsletterForm() {
+  const [phone, setPhone] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+  const { t } = useTranslation();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!phone) return;
+
+    try {
+      await authService.subscribeToNewsletter(phone);
+      
+      setSubmitted(true);
+      setPhone('');
+    } catch (error) {
+      console.error('Newsletter signup failed', error);
+    }
+  };
+
+  if (submitted) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="flex items-center gap-2 text-green-600 font-bold text-xl"
+      >
+        <ShieldCheck size={28} />
+        <span>{t('newsletter.success')}</span>
+      </motion.div>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="w-full max-w-lg flex flex-col sm:flex-row gap-4">
+      <input
+        type="tel"
+        placeholder={t('newsletter.placeholder')}
+        value={phone}
+        onChange={(e) => setPhone(e.target.value)}
+        className="flex-grow px-8 py-4 rounded-2xl bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black/5 transition-all text-lg"
+        required
+      />
+      <button
+        type="submit"
+        className="btn-primary px-10 py-4 text-lg whitespace-nowrap"
+      >
+        {t('newsletter.button')}
+      </button>
+    </form>
   );
 }

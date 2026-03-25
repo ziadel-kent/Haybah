@@ -1,28 +1,34 @@
 import { useCart } from '../hooks/useCart';
 import { Trash2, Plus, Minus, ArrowRight, ShoppingBag } from 'lucide-react';
 import { motion } from 'motion/react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '../hooks/useAuth';
+import { useEffect } from 'react';
 
 export default function Cart() {
   const { cart, removeFromCart, updateQuantity, totalPrice, clearCart } = useCart();
   const { t } = useTranslation();
+  const { isAdmin } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAdmin) {
+      navigate('/admin');
+    }
+  }, [isAdmin, navigate]);
 
   const handleCheckout = () => {
     if (cart.length === 0) return;
 
-    const message = `Hello, I want to order from Haybah:\n\n${cart
-      .map(item => `* ${item.title} x${item.quantity}`)
-      .join('\n')}\n\nTotal: $${totalPrice.toFixed(2)}`;
-
-    const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/201000000000?text=${encodedMessage}`; // Replace with your actual number
-    
-    window.open(whatsappUrl, '_blank');
+    // In a real app, you would integrate a payment gateway here.
+    // For now, we just clear the cart and show a success message.
     clearCart();
     toast.success(t('cart.checkout') + '!');
   };
+
+  if (isAdmin) return null;
 
   if (cart.length === 0) {
     return (
