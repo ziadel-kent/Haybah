@@ -31,7 +31,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return unsubscribe;
   }, []);
 
-  const isAdmin = profile?.role === 'admin' || user?.email === 'ziadmhmdaly@gmail.com';
+  const adminEmail = import.meta.env.VITE_ADMIN_EMAIL;
+  const isAdmin = profile?.role === 'admin' || (!!adminEmail && user?.email === adminEmail);
 
   return (
     <AuthContext.Provider value={{ user, profile, loading, isAdmin }}>
